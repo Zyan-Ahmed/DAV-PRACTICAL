@@ -1,0 +1,104 @@
+import pandas as pd
+import numpy as np
+import regex as re
+
+data = {
+    "Name": ["Alice", "Bob", "Charlie", None, "David", "Eve"],
+    "Age": [25, np.nan, 30, 22, None, 28],
+    "City": ["Newyork", "London", "Paris", "Delhi", None, "Mumbai"],
+    "salary": ["50000", "60000", "unknown", "45000", "55000", ""]
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+type(df)
+
+data1 = pd.Series(["Erica", "Tanya", "tejaswi", None, "siya", np.nan])
+data1
+data1.isnull
+data1.isnull()
+data1
+
+data1[4] = None
+data1
+data1.dropna()
+
+data1[0] = "Sadiya"
+data1
+data1.notnull()
+
+name = "Tara  ,   Sara  ,   Zara"
+name
+name.split()
+name.strip()
+
+t = name.strip().split(",")
+t
+
+p = ["hii", "msc", "data", "science"]
+first, second, third, fourth = p
+p
+first
+second
+third
+fourth
+
+"::".join(p)
+name.replace(',', '::')
+
+name1 = "siya   jiya\t   riya\t    priya   piya"
+name1
+re.split(r'\s+', name1)
+
+mydata = " siya siyarajput@gmail.com  nyasa  nyasarao12@gamial.com  kavya  kavyasharma@gmail.com"
+pattern = r'[a-z0-9._-]+@[a-z0-9-]+\.[a-z0-9.-]+'
+data2 = re.compile(pattern, re.IGNORECASE)
+data2.findall(mydata)
+
+string = " hello this is my program "
+
+result = string.lower()
+result
+
+result = string.upper()
+result
+
+result = string.isalnum()
+result
+
+result = string.capitalize()
+result
+
+result = string.casefold()
+result
+
+result = string.encode()
+result
+
+result = string.count("hello")
+result
+
+result = string.count("l")
+result
+
+result = string.center(55)
+result
+
+result = string.center(111)
+result
+
+result = string.count("i")
+result
+
+result = string.count("a")
+result
+
+result = string.endswith("m")
+result
+
+result = string.endswith(" ")
+result
+
+result = string.expandtabs(5)
+result
