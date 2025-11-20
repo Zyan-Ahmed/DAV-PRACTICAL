@@ -1,0 +1,86 @@
+import pandas as pd
+import numpy as np
+
+# 1. Load dataset
+df = pd.read_csv(r"C:\Users\admin\population_data.csv")
+print("Original Data Shape:", df.shape)
+print("\nOriginal Columns:", df.columns.tolist())
+print(df)
+
+# 2. Save as a text file
+df.to_csv(r"C:\Users\admin\population_data_1.txt", sep='|', index=False)
+print("\nFile Saved Successfully !!!")
+
+# 3. Reload the text file
+text_data = pd.read_csv(r"C:\Users\admin\population_data_1.txt", sep='|')
+print("\nReloaded Data Shape:", text_data.shape)
+print("Columns after reload:", text_data.columns.tolist())
+
+# ---------- FIX COLUMN NAMES AUTOMATICALLY ----------
+# Try to find Population column
+pop_col = None
+for col in text_data.columns:
+    if "pop" in col.lower():
+        pop_col = col
+        break
+
+# Try to find Growth column
+growth_col = None
+for col in text_data.columns:
+    if "growth" in col.lower():
+        growth_col = col
+        break
+
+print("\nDetected Population column:", pop_col)
+print("Detected Growth column:", growth_col)
+
+# Rename them safely
+if pop_col:
+    text_data.rename(columns={pop_col: "Population"}, inplace=True)
+
+if growth_col:
+    text_data.rename(columns={growth_col: "Growth Rate"}, inplace=True)
+
+# Final column list
+print("\nFinal Columns:", text_data.columns.tolist())
+
+# ---------- Continue Processing Without Errors ----------
+
+# b. Handle missing values
+if "Population" in text_data.columns:
+    text_data["Population"].fillna(text_data["Population"].mean(), inplace=True)
+    print("\nPopulation mean:", text_data["Population"].mean())
+else:
+    print("\nERROR: No Population column found!")
+    print("Please share your column names.")
+    exit()
+
+# c. Filter most populated countries
+most_populated_countries = text_data[text_data["Population"] > text_data["Population"].mean()]
+print("\nMost Populated Countries:\n", most_populated_countries)
+
+# d. Create Population to Growth Ratio column
+if "Growth Rate" in text_data.columns:
+    text_data['Population_Growth_Ratio'] = np.where(
+        (text_data['Growth Rate'] != 0) & (text_data['Growth Rate'].notna()),
+        text_data['Population'] / text_data['Growth Rate'],
+        0
+    )
+else:
+    print("\nGrowth Rate column missing — skipping ratio calculation.")
+    text_data['Population_Growth_Ratio'] = 0
+
+# e. Group by Year
+if "Year" in text_data.columns:
+    yearly_group = text_data.groupby("Year").agg({
+        "Population": "mean",
+        "Growth Rate": "mean",
+        "Population_Growth_Ratio": "mean"
+    }).reset_index()
+    print("\nAverage / aggregated stats by Year:\n", yearly_group)
+else:
+    print("\nNo 'Year' column to group by.")
+
+# f. Sort countries by Population_Growth_Ratio
+print("\nTop Countries by Population_Growth_Ratio:\n",
+      text_data.sort_values("Population_Growth_Ratio", ascending=False).head())
