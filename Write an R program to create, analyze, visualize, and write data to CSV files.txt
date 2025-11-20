@@ -1,0 +1,26 @@
+set.seed(123)
+num_students = 100
+student_data = data.frame(
+  Name = paste("Student", 1:num_students), 
+  Score = round(runif(num_students, 50, 100)), 
+  Age = sample(18:25, num_students, replace = TRUE) 
+)
+cat("Sample Student Data:\n")
+print(student_data)
+
+print(summary(student_data$Score))
+
+mean_score = mean(student_data$Score)
+sd_score = sd(student_data$Score)
+cat("\nMean Score:", mean_score, "\n") 
+cat("Standard Deviation of Scores:", sd_score, "\n")
+
+# Step 3: Visualize data
+install.packages("ggplot2")
+library(ggplot2)
+ggplot(student_data, aes(Score)) +
+  geom_histogram(binwidth = 5, fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Student Scores") +
+  theme_minimal()
+
+
