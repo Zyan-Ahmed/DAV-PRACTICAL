@@ -1,0 +1,34 @@
+
+#Getting a mode
+install.packages("DescTools")
+library(DescTools)
+data<-c(39,45,92,56,34,56,39,25,39,25,39,95,36,45,78,86,92,68)
+Mode(data)
+
+#mean
+mean(data)
+
+#median
+median(data)
+
+#quartile
+quantile(data)
+
+#IQR
+IQR(data)
+
+#range
+range(data)
+
+#Creating a histogram
+hist(data,
+     main='Histogram of data',
+     xlab='values',
+     ylab='Freq',
+     col='blue',
+     border = 'black')
+data("iris")
+x = iris$Sepal.Length
+
+Mode(x)
+
