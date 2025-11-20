@@ -1,0 +1,82 @@
+import pandas as pd
+import numpy as np
+
+# -------------------------
+# 1) Create sample dataset
+# -------------------------
+data = {
+    'Country': ['India', 'China', 'USA', 'Indonesia', 'Pakistan', 'Brazil', 'Nigeria', 'Bangladesh',
+                'Russia', 'Mexico', None],
+    'Population': [1400000000, 1440000000, 331000000, 273000000, 220000000, 213000000,
+                   None, 166000000, 145000000, 126000000, 120000000],
+    'Year': [2023] * 11,
+    'GrowthRate': [0.8, 0.3, 0.5, 1.1, 2.0, 0.7, 2.6, 1.0, 0.0, 1.2, 1.0]
+}
+
+df = pd.DataFrame(data)
+
+# -------------------------
+# 2) Inspect original data
+# -------------------------
+print("Original Dataset:")
+print(df)
+
+# -------------------------
+# 3) Save original copies (text formats)
+# -------------------------
+df.to_csv("population_data.csv", index=False)
+df.to_json("population_data.json", orient="records", lines=True)
+df.to_csv("population_data.txt", sep="\t", index=False)
+
+# -------------------------
+# 4) Data wrangling
+# -------------------------
+
+# Detect missing values
+print("\nMissing values per column:\n", df.isnull().sum())
+
+# Fill missing Population with mean (exclude NaNs automatically)
+# Convert to float first to be safe (None -> NaN)
+df['Population'] = pd.to_numeric(df['Population'], errors='coerce')
+
+pop_mean = df['Population'].mean()
+print(f"\nPopulation mean (used for filling missing values): {pop_mean}")
+
+df['Population'].fillna(pop_mean, inplace=True)
+
+# Drop rows with missing Country (we cannot keep rows without a country name)
+df.dropna(subset=['Country'], inplace=True)
+
+# Remove duplicates:
+# To demonstrate duplicate removal we append a duplicate of the first row (safe method)
+df = pd.concat([df, df.iloc[[0]]], ignore_index=True)
+
+# drop exact duplicate rows (keeps first occurrence)
+df.drop_duplicates(inplace=True)
+
+# Ensure correct data types
+df['Year'] = df['Year'].astype(int)
+df['Country'] = df['Country'].astype(str)
+df['GrowthRate'] = pd.to_numeric(df['GrowthRate'])
+
+# -------------------------
+# 5) Filtering & aggregation
+# -------------------------
+high_growth = df[df['GrowthRate'] > 1.0]
+print("\nHigh Growth Countries (GrowthRate > 1.0):")
+print(high_growth[['Country', 'Population', 'GrowthRate']])
+
+grouped = df.groupby("Year")["Population"].sum()
+print("\nTotal Population by Year:")
+print(grouped)
+
+# -------------------------
+# 6) Save cleaned data
+# -------------------------
+df.to_csv("cleaned_population_data.csv", index=False)
+
+# -------------------------
+# 7) Final preview
+# -------------------------
+print("\nCleaned Dataset (preview):")
+print(df.head())
