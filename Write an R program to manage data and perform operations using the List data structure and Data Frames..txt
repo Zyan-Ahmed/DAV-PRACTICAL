@@ -1,0 +1,42 @@
+#creating a list
+student_list = list(
+  Name = c('Zyan','Saleha','Muskaan'),
+  Age = c(21,18,19),
+  Marks = c(30,40,70)
+)
+cat("Original Student Names:\n") 
+print(student_list)
+
+#Accessing a column
+print(student_list$Name) 
+
+#Modifying element in the list
+student_list$Name[3]='Moti'
+print(student_list)
+
+#Converting list into a Datframe
+my_df = data.frame(
+  Names = student_list$Name,
+  Age = student_list$Age,
+  Marks = student_list$Marks
+)
+cat("\n student Data Frame: \n") 
+print(my_df)
+
+new_data = data.frame(Names = 'Soleha',Age=19,Marks=0)
+my_df = rbind(my_df,new_data)
+print(my_df)
+
+#display student with marks > 60
+high_marks = subset(my_df,Marks>60)
+print(high_marks)
+
+#Average marks
+mean_marks = mean(my_df$Marks)
+print(mean_marks)
+#Summary
+print(summary (student_df))
+
+#Summary
+summ = summary(my_df)
+print(summ)
